@@ -1,6 +1,6 @@
 package framework.managers;
 
-import framework.pages.FormPage;
+import framework.pages.FramePage;
 import framework.pages.MortgagePage;
 import framework.pages.StartPage;
 
@@ -8,7 +8,7 @@ public class PageManager {
     private static PageManager INSTANCE = null;
     private StartPage startPage;
     private MortgagePage mortgagePage;
-    private FormPage formPage;
+    private FramePage framePage;
 
     private PageManager() {
 
@@ -35,11 +35,11 @@ public class PageManager {
         return mortgagePage;
     }
 
-    public FormPage getFormPage() {
-        if (formPage == null) {
-            formPage = new FormPage();
+    public FramePage getFramePage() {
+        if (framePage == null) {
+            framePage = new FramePage();
         }
-        return formPage;
+        return framePage;
     }
 
 }

@@ -4,6 +4,7 @@ import framework.managers.DriverManager;
 import framework.managers.PageManager;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -38,5 +39,42 @@ public class BasePage {
         return element;
     }
 
+    protected WebElement clickToElementJs(WebElement element) {
+        JavascriptExecutor javascriptExecutor = (JavascriptExecutor) driverManager.getDriver();
+        javascriptExecutor.executeScript("arguments[0].click();", element);
+        return element;
+    }
+
+    protected FramePage getFramePage(WebElement element){
+        driverManager.getDriver().switchTo().frame(element);
+        return pageManager.getFramePage();
+    }
+
+    protected void waitStabilityPage(int maxWaitMillis, int pollDelimiter) {
+        double startTime = System.currentTimeMillis();
+        while (System.currentTimeMillis() < startTime + maxWaitMillis) {
+            String prevState = driverManager.getDriver().getPageSource();
+            wait(pollDelimiter); // <-- would need to wrap in a try catch
+            if (prevState.equals(driverManager.getDriver().getPageSource())) {
+                return;
+            }
+        }
+    }
+
+    protected void wait(int mlSec){
+        try {
+            Thread.sleep(mlSec);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    protected void sendKeysByOneChar(WebElement element, String value){
+        String[] strings = value.split("");
+        Actions actions = new Actions(driverManager.getDriver());
+        for (String charItem: strings) {
+            actions.moveToElement(element).pause(100).click(element).sendKeys(charItem).pause(100).build().perform();
+        }
+
+    }
 
 }
